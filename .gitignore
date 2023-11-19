@@ -1,0 +1,16 @@
+data/
+.data
+.vscode
+.ipynb_checkpoints
+Images/
+/MNIST-Dataset
+
+
+
+## zip files
+*.rar
+
+##models
+*.ckpt
+*.pt
+
