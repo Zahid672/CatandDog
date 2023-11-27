@@ -8,20 +8,20 @@ import torchvision.transforms as transforms
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Hyper-parameters 
-input_size = 784
-hidden_size = 500
+input_size = 784 # how about 28 * 28 
+hidden_size = 500 # how
 num_classes = 10
 num_epochs = 5
 batch_size = 100
 learning_rate = 0.001
 
 # MNIST dataset 
-train_dataset = torchvision.datasets.MNIST(root='../../data', 
+train_dataset = torchvision.datasets.MNIST(root='data', 
                                            train=True, 
                                            transform=transforms.ToTensor(),  
-                                           download=True)
+                                           download=False)
 
-test_dataset = torchvision.datasets.MNIST(root='../../data', 
+test_dataset = torchvision.datasets.MNIST(root='data', 
                                           train=False, 
                                           transform=transforms.ToTensor())
 
@@ -35,21 +35,25 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                           shuffle=False)
 
 # Fully connected neural network with one hidden layer
+# Define the Class
+# We collect all the stuff here
 class NeuralNet(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes):
+    def __init__(self, input_size, hidden_size, num_classes): # initialize the neural network layers in __init__.
         super(NeuralNet, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size) 
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(hidden_size, num_classes)  
     
-    def forward(self, x):
+    def forward(self, x): # Every nn.Module subclass implements the operations on input data in the forward method.
         out = self.fc1(x)
         out = self.relu(out)
         out = self.fc2(out)
+        # relu is missing. har layer sa ba activation function v???
         return out
 
 model = NeuralNet(input_size, hidden_size, num_classes).to(device)
 
+# below process is same for all
 # Loss and optimizer
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)  
@@ -59,19 +63,19 @@ total_step = len(train_loader)
 for epoch in range(num_epochs):
     for i, (images, labels) in enumerate(train_loader):  
         # Move tensors to the configured device
-        images = images.reshape(-1, 28*28).to(device)
+        images = images.reshape(-1, 28*28).to(device) ## what is -1??? reshape the input to [B, ...]
         labels = labels.to(device)
         
         # Forward pass
-        outputs = model(images)
-        loss = criterion(outputs, labels)
+        outputs = model(images) #?????????
+        loss = criterion(outputs, labels) #???????
         
         # Backward and optimize
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        optimizer.zero_grad() ## initialize the optimizer 
+        loss.backward() ## weight calculation 
+        optimizer.step() ## weight updates
         
-        if (i+1) % 100 == 0:
+        if (i+1) % 100 == 0: # ?????
             print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
                    .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
 
@@ -84,7 +88,7 @@ with torch.no_grad():
         images = images.reshape(-1, 28*28).to(device)
         labels = labels.to(device)
         outputs = model(images)
-        _, predicted = torch.max(outputs.data, 1)
+        _, predicted = torch.max(outputs.data, 1) # _????
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
 
