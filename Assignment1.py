@@ -63,10 +63,10 @@ class NeuralNet(nn.Module):
         out6 = self.fc1(out5)
         out7 = self.act(out6)
         out8 = self.fc2(out7)
-        out9 = self.act(out8)
+        #out9 = self.act(out8)
 
 
-        return out9
+        return out8
     
 
 model = NeuralNet(1,500,10).to(device) # feed-forward---> input, hidden, output.
@@ -98,9 +98,10 @@ for epoch in range(num_epochs):
         outputs = model(images)
         loss = criterion(outputs, labels)
 
-        optimizer.zero_grad()
+        optimizer.zero_grad() # 
         loss.backward()
         optimizer.step()
+        
 
         ### train accuracies
         out_probs = torch.softmax(outputs, dim=1)
