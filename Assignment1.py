@@ -98,9 +98,9 @@ for epoch in range(num_epochs):
         outputs = model(images)
         loss = criterion(outputs, labels)
 
-        optimizer.zero_grad() # 
-        loss.backward()
-        optimizer.step()
+        optimizer.zero_grad() # initialize the optimizer
+        loss.backward() # weight calculation
+        optimizer.step() # weight updates
         
 
         ### train accuracies
