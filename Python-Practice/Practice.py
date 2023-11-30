@@ -1,9 +1,31 @@
-# Mutable --> List/sets/Dictionary
-# Immutable --> Strings/tuples/int/float/boolean/complex
+def calculateGmean(a, b):
+    mean = (a*b)/(a+b)
+    print(mean)
 
-Dic = {'Name':'Zahid', 'Uni':'KNUT','Marks':{'M':55,'English':99}}
-for i in Dic:
-    print(i)
+def isGreater(a, b):
+    if a>b:
+        print('First number is greater')
+    else:
+        print('Second number is greater or equal')
+def isLesser(a,b):
+    if a<b:
+        print('First number is less')
+    else:
+        print('Second number is greater or equal')
+
+
+
+a = 8 
+b = 9
+calculateGmean(a, b)
+isGreater(a,b)
+isLesser(a,b)
+
+
+          
+
+
+
 
     
 

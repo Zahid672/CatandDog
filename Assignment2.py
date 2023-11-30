@@ -25,6 +25,10 @@ train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
                                            batch_size=batch_size,
                                            shuffle=False)
 
+test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
+                                           batch_size=batch_size,
+                                           shuffle=False)
+
 class NeuralNet(nn.Module):
     def __init__(self, aa,  num_classes):
         super(NeuralNet,self).__init__()
@@ -68,7 +72,7 @@ model = NeuralNet(1,10).to(device) # feed-forward---> input, hidden, output.
 
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(),lr=learning_rate)
-num_epochs = 5
+num_epochs = 20
 
 total_step = len(train_loader)
 
@@ -114,4 +118,26 @@ for epoch in range(num_epochs):
 
 for epoch in range(num_epochs):
     print('Accuracy of the network on the train images: {:.2f} %, on epoch {}'.format(epoch_accuracy[epoch], epoch+1))
+
+
+
+correct = 0
+total = 0
+for i, (images, labels) in (enumerate(tqdm(test_loader))):
+    images = images.to(device)
+    labels = labels.to(device)
+    outputs = model(images)
+
+
+    out_probs = torch.softmax(outputs, dim=1) ### convert into range of [0 1]
+    __, predicted = torch.max(out_probs.data, 1) ## only take the maximum class probability
+
+    total += labels.size(0) #total no. of samples in all iterations 
+    correct += (predicted == labels).sum().item() ### total no. of correct predictions in all iterations
+
+print("Test accuracy {:.2f}".format(correct/total * 100))
+
+
+  
+
 
